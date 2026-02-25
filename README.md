@@ -26,11 +26,12 @@ The dataset was shared by Apollo diagnostic center for research purpose.
 
 ## How to run
 
-Step 1. Download the zip file
+## Step 1. Download the zip file
 ```
 Download the zip file and extract it to a folder.
 
-step 2 : create an .env file & give the keys mension below
+
+## Step 2: create an .env file & give the keys mension below
 
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 
@@ -39,15 +40,15 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 export AWS_DEFAULT_REGION=<AWS_DEFAULT_REGION>
 
 ```
-Step 2. Create an environment using:Python -m venv my_env
+## Step 3. Create an environment using:Python -m venv my_env
 
-```
- activate an evirnoment : my_env\Scripts\activate
+``
+## step 4. activate an evirnoment : my_env\Scripts\activate
 
 
-Step 3. Install the requirements : pip install -r requirements.txt
+## Step 5. Install the requirements : pip install -r requirements.txt
 
-Step 4. run an app.py using : streamlit run app.py
+## Step 6. run an app.py using : streamlit run app.py
 ```
  or using python app.py
 ```
