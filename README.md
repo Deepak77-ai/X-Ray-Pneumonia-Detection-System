@@ -35,7 +35,6 @@ https://github.com/Deepak77-ai/-normal-or-pnumonia-detection-using-X_ray-imeges/
 ```
 
 Step 2: create an .env file & give the keys mension below
-```
 
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 
