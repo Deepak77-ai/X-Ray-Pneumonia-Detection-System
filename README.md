@@ -35,6 +35,7 @@ https://github.com/Deepak77-ai/-normal-or-pnumonia-detection-using-X_ray-imeges/
 ```
 
 Step 2: create an .env file & give the keys mension below
+```
 
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 
@@ -42,7 +43,7 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
 export AWS_DEFAULT_REGION=<AWS_DEFAULT_REGION>
 
-```
+
 Step 3. Create an environment using : Python -m venv my_env
 
 step 4. activate an evirnoment : my_env\Scripts\activate
