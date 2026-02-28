@@ -25,8 +25,11 @@ The dataset was shared by Apollo diagnostic center for research purpose.
 3. Github Actions
 
 ## How to run
+go to my live application(sometimes it takes few sec to load) -->  https://iv3kva4wxasask33xbpeyc.streamlit.app/
 
-## Step 1. Download the zip file
+         OR
+         
+ Step 1. Download the zip file
 ```
 Download the zip file and extract it to a folder.
 
@@ -40,18 +43,15 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 export AWS_DEFAULT_REGION=<AWS_DEFAULT_REGION>
 
 ```
-## Step 3. Create an environment using:Python -m venv my_env
+Step 3. Create an environment using : "Python -m venv my_env"
 
 ``
-## step 4. activate an evirnoment : my_env\Scripts\activate
+ step 4. activate an evirnoment : "my_env\Scripts\activate"
 
+ Step 5. Install the requirements : "pip install -r requirements.txt"
 
-## Step 5. Install the requirements : pip install -r requirements.txt
+ Step 6. run an app.py using : "streamlit run app.py" or using "python app.py"
 
-## Step 6. run an app.py using : streamlit run app.py
-```
- or using python app.py
-```
 
 ## Conclusion
 - The project we have created can also be in real-life by doctors to check whether the person is having Pneumonia or not. It will help doctors to take
