@@ -28,13 +28,14 @@ The dataset was shared by Apollo diagnostic center for research purpose.
 go to my live application(sometimes it takes few sec to load) -->  https://iv3kva4wxasask33xbpeyc.streamlit.app/
 
          OR
-         
- Step 1. Download the zip file
+
+Step 1. Cloning the repository.
+
 ```
-Download the zip file and extract it to a folder.
 
+https://github.com/Deepak77-ai/-normal-or-pnumonia-detection-using-X_ray-imeges/
 
-## Step 2: create an .env file & give the keys mension below
+Step 2: create an .env file & give the keys mension below
 
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 
