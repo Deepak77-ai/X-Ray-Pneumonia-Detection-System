@@ -7,7 +7,16 @@ import numpy as np
 from pathlib import Path
 
 from xray.ml.model.arch import Net
-from xray.constant.training_pipeline import RESIZE, NORMALIZE_LIST_1, NORMALIZE_LIST_2
+from xray.constant.training_pipeline import (
+    RESIZE,
+    NORMALIZE_LIST_1,
+    NORMALIZE_LIST_2,
+)
+
+# -------------------------------------------------
+# MODEL ARTIFACT PATH
+# -------------------------------------------------
+MODEL_PATH = Path("artifacts/model_trainer/xray_model.pth")
 
 # -------------------------------------------------
 # PAGE CONFIG
@@ -15,15 +24,15 @@ from xray.constant.training_pipeline import RESIZE, NORMALIZE_LIST_1, NORMALIZE_
 st.set_page_config(
     page_title="Chest X-Ray Diagnostic System",
     page_icon="🩻",
-    layout="centered"
+    layout="centered",
 )
 
 # -------------------------------------------------
-# GLOBAL CSS (Modern Website UI)
+# GLOBAL CSS
 # -------------------------------------------------
-st.markdown("""
+st.markdown(
+    """
 <style>
-/* -------- GLOBAL BACKGROUND -------- */
 body {
     background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
 }
@@ -32,7 +41,6 @@ body {
     padding-top: 25px;
 }
 
-/* -------- HERO HEADER -------- */
 .header {
     text-align: center;
     margin-bottom: 45px;
@@ -53,7 +61,6 @@ body {
     color: #e1bee7;
 }
 
-/* -------- GLASS CARD -------- */
 .card {
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(12px);
@@ -78,7 +85,6 @@ body {
     margin-bottom: 18px;
 }
 
-/* -------- RESULTS -------- */
 .result-normal {
     background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
     border-left: 6px solid #2e7d32;
@@ -101,7 +107,6 @@ body {
     box-shadow: 0 10px 25px rgba(198,40,40,0.25);
 }
 
-/* -------- FOOTER -------- */
 .footer {
     text-align: center;
     color: #455a64;
@@ -109,19 +114,32 @@ body {
     margin-top: 50px;
 }
 </style>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # -------------------------------------------------
-# LOAD MODEL
+# LOAD MODEL FROM ARTIFACT
 # -------------------------------------------------
 @st.cache_resource
 def load_model():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    if not MODEL_PATH.exists():
+        st.error(
+            f"Model artifact not found: {MODEL_PATH}\n\n"
+            "Please run your training pipeline first so it creates this model file."
+        )
+        st.stop()
+
     model = Net().to(device)
-    model_path = Path(__file__).parent / "xray_model.pth"
-    model.load_state_dict(torch.load(model_path, map_location=device))
+
+    state_dict = torch.load(MODEL_PATH, map_location=device)
+    model.load_state_dict(state_dict)
+
     model.eval()
     return model, device
+
 
 model, device = load_model()
 
@@ -130,37 +148,49 @@ model, device = load_model()
 # -------------------------------------------------
 def preprocess_image(image: Image.Image):
     image = image.resize((RESIZE, RESIZE))
+
     img_array = np.array(image) / 255.0
-    img_tensor = torch.tensor(img_array, dtype=torch.float32).permute(2, 0, 1)
+
+    img_tensor = torch.tensor(
+        img_array,
+        dtype=torch.float32
+    ).permute(2, 0, 1)
 
     mean = torch.tensor(NORMALIZE_LIST_1).view(3, 1, 1)
     std = torch.tensor(NORMALIZE_LIST_2).view(3, 1, 1)
 
     img_tensor = (img_tensor - mean) / std
+
     return img_tensor.unsqueeze(0)
 
 # -------------------------------------------------
-# HEADER (Website Hero Section)
+# HEADER
 # -------------------------------------------------
-st.markdown("""
+st.markdown(
+    """
 <div class="header">
     <h1>🩻 Chest X-Ray Diagnostic System</h1>
     <p>AI-powered detection of Pneumonia from chest X-ray images</p>
 </div>
-""", unsafe_allow_html=True)
+""",
+    unsafe_allow_html=True,
+)
 
 # -------------------------------------------------
 # UPLOAD CARD
 # -------------------------------------------------
 st.markdown('<div class="card">', unsafe_allow_html=True)
-st.markdown('<div class="card-title">📤 Upload X-Ray Image</div>', unsafe_allow_html=True)
+st.markdown(
+    '<div class="card-title">📤 Upload X-Ray Image</div>',
+    unsafe_allow_html=True,
+)
 
 uploaded_file = st.file_uploader(
     "Select a chest X-ray image (JPG / PNG)",
-    type=["jpg", "jpeg", "png"]
+    type=["jpg", "jpeg", "png"],
 )
 
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------------------------
 # PREDICTION LOGIC
@@ -169,9 +199,12 @@ if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
 
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">🖼 Uploaded Image</div>', unsafe_allow_html=True)
-    st.image(image, width=650)  # ✅ FIXED DEPRECATION WARNING
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="card-title">🖼 Uploaded Image</div>',
+        unsafe_allow_html=True,
+    )
+    st.image(image, width=650)
+    st.markdown("</div>", unsafe_allow_html=True)
 
     input_tensor = preprocess_image(image).to(device)
 
@@ -181,40 +214,56 @@ if uploaded_file:
         prediction = torch.argmax(probabilities, dim=1).item()
 
     confidence = probabilities[0][prediction].item() * 100
-    label_map = {0: "Normal", 1: "Pneumonia"}
+
+    label_map = {
+        0: "Normal",
+        1: "Pneumonia",
+    }
+
     result = label_map[prediction]
 
-    # -------------------------------------------------
-    # RESULT CARD
-    # -------------------------------------------------
     st.markdown('<div class="card">', unsafe_allow_html=True)
-    st.markdown('<div class="card-title">🧪 Diagnosis Result</div>', unsafe_allow_html=True)
+    st.markdown(
+        '<div class="card-title">🧪 Diagnosis Result</div>',
+        unsafe_allow_html=True,
+    )
 
     if result == "Normal":
         st.markdown(
-            f'<div class="result-normal">✅ NORMAL — Confidence: {confidence:.2f}%</div>',
-            unsafe_allow_html=True
+            f"""
+            <div class="result-normal">
+                ✅ NORMAL — Confidence: {confidence:.2f}%
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
     else:
         st.markdown(
-            f'<div class="result-danger">⚠️ PNEUMONIA — Confidence: {confidence:.2f}%</div>',
-            unsafe_allow_html=True
+            f"""
+            <div class="result-danger">
+                ⚠️ PNEUMONIA — Confidence: {confidence:.2f}%
+            </div>
+            """,
+            unsafe_allow_html=True,
         )
 
     st.markdown("### 📊 Probability Distribution")
+
     st.progress(probabilities[0][prediction].item())
 
-    st.write({
-        "Normal (%)": f"{probabilities[0][0].item() * 100:.2f}",
-        "Pneumonia (%)": f"{probabilities[0][1].item() * 100:.2f}"
-    })
+    st.write(
+        {
+            "Normal (%)": f"{probabilities[0][0].item() * 100:.2f}",
+            "Pneumonia (%)": f"{probabilities[0][1].item() * 100:.2f}",
+        }
+    )
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
 
 # -------------------------------------------------
 # FOOTER
 # -------------------------------------------------
 st.markdown(
     '<div class="footer">© 2026 • AI Medical Imaging Demo • Built with PyTorch & Streamlit</div>',
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
