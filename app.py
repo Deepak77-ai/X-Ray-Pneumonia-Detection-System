@@ -18,7 +18,8 @@ from xray.constant.training_pipeline import (
 # -------------------------------------------------
 #trained_model_path
 #MODEL_PATH = Path("xray/entity/trained_model_path")
-MODEL_PATH = Path("artifacts/model_trainer/xray_model.pth")
+MODEL_PATH = Path("xray_model.pth")
+
 
 # -------------------------------------------------
 # PAGE CONFIG
