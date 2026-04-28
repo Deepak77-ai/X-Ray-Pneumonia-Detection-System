@@ -16,7 +16,7 @@ from xray.constant.training_pipeline import (
 # -------------------------------------------------
 # MODEL ARTIFACT PATH
 # -------------------------------------------------
-trained_model_path
+#trained_model_path
 #MODEL_PATH = Path("xray/entity/trained_model_path")
 MODEL_PATH = Path("artifacts/model_trainer/xray_model(1).pth")
 
