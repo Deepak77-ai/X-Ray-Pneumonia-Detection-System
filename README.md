@@ -25,7 +25,7 @@ The dataset was shared by Apollo diagnostic center for research purpose.
 3. Github Actions
 
 ## How to run
-go to my live application(sometimes it takes few sec to load) -->  https://iv3kva4wxasask33xbpeyc.streamlit.app/
+go to my live application(sometimes it takes few sec to load) -->  https://xray-pnumonia-detection-system-ogqoghv577ltvxn8bscb7s.streamlit.app/
 
          OR
 
