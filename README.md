@@ -25,14 +25,16 @@ The dataset was shared by Apollo diagnostic center for research purpose.
 3. Github Actions
 
 ## How to run
-go to my live application(sometimes it takes few sec to load) -->  https://xray-pnumonia-detection-system-ogqoghv577ltvxn8bscb7s.streamlit.app/
-
+go to my live application(sometimes it takes few sec to load) --> 
+```
+https://xray-pnumonia-detection-system-ogqoghv577ltvxn8bscb7s.streamlit.app/
+```
          OR
 
 Step 1. Cloning the repository.
-
+```
 https://github.com/Deepak77-ai/-normal-or-pnumonia-detection-using-X_ray-imeges/
-
+```
 
 Step 2: create an .env file & give the keys mension below
 ```
