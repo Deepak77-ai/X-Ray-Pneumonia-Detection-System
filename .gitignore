@@ -133,3 +133,10 @@ dmypy.json
 .pyre/
 
 artifacts/
+
+my_env/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+*.pth
+data/
