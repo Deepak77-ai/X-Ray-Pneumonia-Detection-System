@@ -494,6 +494,28 @@ def preprocess_image(image: Image.Image) -> torch.Tensor:
 
     return img_tensor.unsqueeze(0)   # shape: [1, 3, H, W]
 
+
+def is_likely_xray(image: Image.Image) -> bool:
+    """
+    Basic validation guard to reject obvious non-X-ray images.
+    Chest X-rays are usually mostly grayscale and have meaningful contrast.
+    This is not a medical validator; it only prevents normal photos/screenshots
+    from being sent directly to the pneumonia classifier.
+    """
+    img = image.resize((224, 224)).convert("RGB")
+    arr = np.array(img).astype(np.float32)
+
+    r, g, b = arr[:, :, 0], arr[:, :, 1], arr[:, :, 2]
+
+    # Non-X-ray photos usually have stronger color channel differences.
+    color_diff = np.mean(np.abs(r - g) + np.abs(g - b) + np.abs(r - b))
+
+    # Very flat or blank images should also be rejected.
+    gray = np.mean(arr, axis=2)
+    contrast = np.std(gray)
+
+    return color_diff < 25 and contrast > 20
+
 # ──────────────────────────────────────────────
 # HERO BANNER  — compact horizontal strip
 # ──────────────────────────────────────────────
@@ -568,6 +590,19 @@ with col_results:
         """, unsafe_allow_html=True)
 
     else:
+        # ── Validate uploaded image before inference ──
+        if not is_likely_xray(image):
+            st.markdown("""
+            <div class="card" style="border-left:5px solid var(--amber);">
+                <div class="card-title">⚠️ Invalid Image</div>
+                <div style="color:var(--text-main); font-size:1rem; line-height:1.7;">
+                    This does not appear to be a chest X-ray image.<br>
+                    Please upload a valid frontal chest radiograph.
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+            st.stop()
+
         # ── Run inference ──
         input_tensor = preprocess_image(image).to(device)
 
